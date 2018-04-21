@@ -14,9 +14,9 @@ class BeatDisplay : public engine::Node {
 public:
 	static constexpr float DisplayTime = 5.345614216f;
 protected:
-	std::unordered_map<SoundInfo::BeatType, engine::Tween<sf::Color>*> m_colorTweens;
-	std::unordered_map<SoundInfo::BeatType, Json::Value> m_beats;
-	std::unordered_map<SoundInfo::BeatType, std::vector<engine::Node*>> m_bars;
+	std::unordered_map<BeatType, engine::Tween<sf::Color>*> m_colorTweens;
+	std::unordered_map<BeatType, Json::Value> m_beats;
+	std::unordered_map<BeatType, std::vector<engine::Node*>> m_bars;
 public:
 	BeatDisplay(engine::Scene* scene);
 	virtual ~BeatDisplay();
@@ -26,8 +26,7 @@ public:
 protected:
 	virtual void OnUpdate(sf::Time interval);
 
-	void AddBar(SoundInfo::BeatType type);
-
+	void AddBar(BeatType type);
 	virtual void OnDraw(sf::RenderTarget& target, sf::RenderStates states, float delta);
 
 };

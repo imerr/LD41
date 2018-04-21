@@ -3,11 +3,20 @@
   "ui": [
     {
       "type": "sprite",
-      "identifier": "inputDisplay",
+      "identifier": "beat_indicator",
       "size": [100, 100],
+      "position": [0, 100],
+      "sprite": {
+        "texture": "assets/images/beat.png"
+      }
+    },
+    {
+      "type": "sprite",
+      "identifier": "input_indicator",
+      "size": [100, 5],
       "position": [100, 100],
       "sprite": {
-        "color": [0,0,0]
+        "texture": "assets/images/input_line.png"
       },
       "children": [
         {
@@ -51,7 +60,31 @@
         "interval": 2,
         "offset": 0,
         "type": 1
+      },
+      {
+        "sound": "assets/sounds/pop.wav",
+        "interval": 4,
+        "offset": 0.5,
+        "type": 1
       }
     ]
-  }
+  },
+  "path": [
+    [-100, 520],
+    [280, 520],
+    [280, 330],
+    [115,330],
+    [115, 65],
+    [440, 65],
+    [450, 425],
+    [570, 425],
+    [570, 520],
+    [570, 520],
+    [810, 520],
+    [810, 280],
+    [585, 275],
+    [585, 135],
+    [910, 130],
+    [910, 0]
+  ]
 }

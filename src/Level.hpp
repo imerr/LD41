@@ -9,38 +9,7 @@
 #include <Engine/Scene.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <Engine/SpriteNode.hpp>
-
-class SoundInfo {
-	float m_beatTime;
-	float m_playIn;
-	float m_prevPlayTime;
-public:
-	enum class BeatType {
-		None,
-		Beat,
-		Max
-	};
-	SoundInfo();
-	void Update(float interval);
-
-	inline float LastPlayTime() {
-		return -m_beatTime;
-	}
-	inline float NextPlayTime(int future = 0) {
-		// TODO: this won't work with any randomness
-		return m_playIn * (future + 1) - m_beatTime;
-	}
-	BeatType Type;
-	float Interval;
-	float Volume;
-	float Offset;
-	float Deviation;
-	std::unique_ptr<sf::Sound> Sound;
-	std::vector<float> Pitches;
-	bool Played;
-
-	void Reset();
-};
+#include "SoundInfo.hpp"
 
 class Level : public engine::Scene {
 protected:
@@ -50,6 +19,7 @@ protected:
 	engine::SpriteNode* m_inputIndicator;
 	engine::EventHandler<bool, const sf::Event::KeyEvent&, bool>* m_keyHandler;
 	bool m_pressedInput;
+	std::vector<sf::Vector2f> m_path;
 public:
 	explicit Level(engine::Game* game);
 	virtual ~Level();
@@ -57,6 +27,10 @@ public:
 	virtual void OnInitializeDone();
 	int GetBPM() {
 		return m_bpm;
+	}
+
+	const std::vector<sf::Vector2f>& GetPath() {
+		return m_path;
 	}
 
 protected:
@@ -67,6 +41,8 @@ public:
 
 
 	std::vector<SoundInfo>& GetSounds();
+
+	static constexpr float HitLimit = 0.5f;
 };
 
 
