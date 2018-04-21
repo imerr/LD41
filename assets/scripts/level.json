@@ -1,0 +1,21 @@
+{
+  "type": "level",
+  "music": {
+    "bpm": 130,
+    "sounds": [
+      {
+        "sound": "assets/sounds/clap.wav",
+        "interval": 2,
+        "offset": 1,
+        "volume": 0.5,
+        "type": 1
+      },
+      {
+        "sound": "assets/sounds/pop.wav",
+        "interval": 2,
+        "offset": 0,
+        "type": 1
+      }
+    ]
+  }
+}
