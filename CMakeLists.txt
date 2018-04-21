@@ -9,7 +9,7 @@ include("engine/includes.cmake")
 include("engine/compiler.cmake")
 include_directories(.)
 
-set(SOURCE_FILES src/main.cpp src/LD41.cpp src/LD41.hpp src/Level.cpp src/Level.hpp)
+set(SOURCE_FILES src/main.cpp src/LD41.cpp src/LD41.hpp src/Level.cpp src/Level.hpp src/BeatDisplay.cpp src/BeatDisplay.hpp)
 
 if (ANDROID)
 	add_library(LD41 SHARED ${SOURCE_FILES})

@@ -1,5 +1,41 @@
 {
   "type": "level",
+  "ui": [
+    {
+      "type": "sprite",
+      "identifier": "inputDisplay",
+      "size": [100, 100],
+      "position": [100, 100],
+      "sprite": {
+        "color": [0,0,0]
+      },
+      "children": [
+        {
+          "type": "beat_display",
+          "position": [50, 0],
+          "beats" : {
+            "1": {
+              "type": "sprite",
+              "origin": "center",
+              "size": [38, 14],
+              "sprite": {
+                "texture": "assets/images/space.png"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "children": [
+    {
+      "type": "sprite",
+      "size": [1024, 576],
+      "sprite": {
+        "texture": "assets/images/bg.png"
+      }
+    }
+  ],
   "music": {
     "bpm": 130,
     "sounds": [
@@ -8,7 +44,7 @@
         "interval": 2,
         "offset": 1,
         "volume": 0.5,
-        "type": 1
+        "type": 0
       },
       {
         "sound": "assets/sounds/pop.wav",
