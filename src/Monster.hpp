@@ -8,17 +8,33 @@
 
 #include <Engine/SpriteNode.hpp>
 
-class Monster : engine::SpriteNode {
+class Monster : public engine::SpriteNode {
 protected:
 	size_t m_pathSegment;
+	float m_speed;
+	std::string m_deathSpawn;
+	size_t m_deathSpawnCount;
+	int m_hp;
+	bool m_dead;
+	engine::EventHandlerWrapper<void, engine::Tween<sf::Vector2f>*> m_onDone;
 public:
 	Monster(engine::Scene* scene);
 
+	virtual bool initialize(Json::Value& root);
 private:
 	virtual void OnUpdate(sf::Time interval);
 
-	virtual bool initialize(Json::Value& root);
 
+	void StartPathTween();
+
+	void Damage(int damage);
+
+	void Dead();
+
+	virtual void OnInitializeDone();
+
+
+	void ReachEnd();
 };
 
 

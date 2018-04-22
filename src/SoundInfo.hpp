@@ -34,7 +34,6 @@ public:
 	float Volume;
 	float Offset;
 	std::unique_ptr<sf::Sound> Sound;
-	std::vector<float> Pitches;
 	bool Played;
 	bool IsHit;
 

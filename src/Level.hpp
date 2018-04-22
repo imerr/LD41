@@ -11,15 +11,29 @@
 #include <Engine/SpriteNode.hpp>
 #include "SoundInfo.hpp"
 
+class SpawnInfo {
+public:
+	SpawnInfo(const std::string& script, size_t count, float delay);
+
+	std::string Script;
+	size_t Count;
+	float Delay;
+};
+
 class Level : public engine::Scene {
 protected:
 	std::vector<SoundInfo> m_sounds;
 	int m_bpm;
-	engine::SpriteNode* m_beatIndicator;
 	engine::SpriteNode* m_inputIndicator;
 	engine::EventHandler<bool, const sf::Event::KeyEvent&, bool>* m_keyHandler;
 	bool m_pressedInput;
 	std::vector<sf::Vector2f> m_path;
+	std::vector<std::vector<SpawnInfo>> m_rounds;
+	size_t m_currentRound;
+	size_t m_currentSpawn;
+	bool m_fighting;
+	float m_spawnTimer;
+	int m_money;
 public:
 	explicit Level(engine::Game* game);
 	virtual ~Level();
@@ -33,6 +47,13 @@ public:
 		return m_path;
 	}
 
+	bool IsFighting() {
+		return m_fighting;
+	}
+	void SetFighting(bool fighting) {
+		m_fighting = fighting;
+	}
+
 protected:
 	virtual void OnUpdate(sf::Time interval);
 
@@ -43,6 +64,8 @@ public:
 	std::vector<SoundInfo>& GetSounds();
 
 	static constexpr float HitLimit = 0.5f;
+
+	bool ChangeMoney(int money);
 };
 
 

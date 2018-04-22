@@ -1,0 +1,42 @@
+{
+  "type": "shop_item",
+  "size": [80, 80],
+  "position": [110, 0],
+  "sprite": {
+    "sheet": "assets/scripts/sheet_ui.json",
+    "animations": {
+      "default": {
+        "frames": [3]
+      },
+      "active": {
+        "frames": [3]
+      },
+      "hover": {
+        "frames": [3]
+      }
+    }
+  },
+  "price": 999999999999,
+  "description": "CHANGE ME!\nPLS",
+  "children": [
+    {
+      "type": "sprite",
+      "identifier": "icon",
+      "position": [10, 10],
+      "size": [60, 60]
+    },
+    {
+      "type": "text",
+      "identifier": "price",
+      "position": [70, 65],
+      "text": {
+        "align": "right",
+        "font": "assets/lcd_solid.ttf",
+        "size": 10,
+        "text": "1234",
+        "outline": [0,0,0],
+        "outline_thickness": 2
+      }
+    }
+  ]
+}

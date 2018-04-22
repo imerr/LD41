@@ -1,0 +1,9 @@
+{
+  "type": "monster",
+  "origin": "center",
+  "size": [40, 40],
+  "sprite": {
+    "texture": "assets/images/green_slime.png"
+  },
+  "speed": 100
+}

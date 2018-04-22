@@ -1,0 +1,9 @@
+{
+  "type": "tower",
+  "origin": "center",
+  "size": [45,45],
+  "sprite": {
+    "texture": "assets/images/bassdrum.png"
+  },
+  "range": 100
+}
