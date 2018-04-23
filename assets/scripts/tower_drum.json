@@ -7,6 +7,7 @@
   },
   "range": 100,
   "speed": 7,
+  "tower_type": 3,
   "face_monster": false,
   "body": {
     "type": "static",

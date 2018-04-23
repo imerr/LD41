@@ -5,10 +5,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(engine ${CMAKE_CURRENT_BINARY_DIR}/engine)
+target_compile_definitions(Engine PRIVATE DISABLE_LIGHTING=1)
 include("engine/includes.cmake")
 include("engine/compiler.cmake")
 include_directories(.)
-
 set(SOURCE_FILES src/main.cpp src/LD41.cpp src/LD41.hpp src/Level.cpp src/Level.hpp src/BeatDisplay.cpp src/BeatDisplay.hpp src/SoundInfo.cpp src/SoundInfo.hpp src/Monster.cpp src/Monster.hpp src/Menu.cpp src/Menu.hpp src/ShopItem.cpp src/ShopItem.hpp src/Tower.cpp src/Tower.hpp src/misc.hpp src/BeatQuality.cpp src/BeatQuality.hpp src/Projectile.cpp src/Projectile.hpp src/ClickBlocker.cpp src/ClickBlocker.hpp)
 
 if (ANDROID)

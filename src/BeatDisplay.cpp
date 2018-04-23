@@ -39,25 +39,25 @@ void BeatDisplay::OnUpdate(sf::Time interval) {
 	}
 	float barHeightPerSecond = 800 / DisplayTime;
 	for (auto& sound : level->GetSounds()) {
-		if (m_beats.find(sound.Type) == m_beats.end()) {
+		if (m_beats.find(sound.Type) == m_beats.end() || !sound.IsPlaying()) {
 			continue;
 		}
 		if (sound.Played) {
 			m_colorTweens[sound.Type]->Reset();
 		}
 		float duration = (std::abs(sound.LastPlayTime()) + sound.NextPlayTime()) / 2.0f;
-		if (sound.LastPlayTime() < 0 && std::abs(sound.LastPlayTime()) < duration) {
-			if (barC[sound.Type] >= m_bars[sound.Type].size()) {
-				AddBar(sound.Type);
-			}
-			auto bar = static_cast<engine::SpriteNode*>(m_bars[sound.Type][barC[sound.Type]]);
-			auto c = bar->GetColor();
-			float pct =  ((duration + sound.LastPlayTime()) / duration);
-			c.a = static_cast<uint8_t>((sound.IsPrevHit() ? 128 : 255) * std::min(1.0f, std::max(0.0f, pct)));
-			bar->SetColor(c);
-			bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.LastPlayTime() * bpm);
-			barC[sound.Type]++;
-		}
+		//if (sound.LastPlayTime() < 0 && std::abs(sound.LastPlayTime()) < duration) {
+		//	if (barC[sound.Type] >= m_bars[sound.Type].size()) {
+		//		AddBar(sound.Type);
+		//	}
+		//	auto bar = static_cast<engine::SpriteNode*>(m_bars[sound.Type][barC[sound.Type]]);
+		//	bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.LastPlayTime() * bpm);
+		//	barC[sound.Type]++;
+		//	auto c = bar->GetColor();
+		//	float pct = ((duration + sound.LastPlayTime()) / duration);
+		//	c.a = static_cast<uint8_t>((sound.IsPrevHit() ? 128 : 255) * std::min(1.0f, std::max(0.0f, pct)));
+		//	bar->SetColor(c);
+		//}
 		for (size_t o = 0; o < 20 && sound.NextPlayTime(o) * bpm <= DisplayTime; o++) {
 			if (barC[sound.Type] >= m_bars[sound.Type].size()) {
 				AddBar(sound.Type);
@@ -103,6 +103,11 @@ bool BeatDisplay::initialize(Json::Value& root) {
 		m_beats.insert(std::make_pair(type, beats[key]));
 	}
 	return true;
+}
+
+void BeatDisplay::SetActive(bool active) {
+	Node::SetActive(active);
+
 }
 
 

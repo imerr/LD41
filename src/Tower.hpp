@@ -16,6 +16,7 @@ protected:
 	int m_beats;
 	Json::Value m_attackProjectile;
 	bool m_faceMonster;
+	int m_towerType;
 public:
 	Tower(engine::Scene* scene);
 	virtual ~Tower();

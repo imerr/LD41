@@ -12,7 +12,7 @@
 
 class BeatDisplay : public engine::Node {
 public:
-	static constexpr float DisplayTime = 5.345614216f;
+	static constexpr float DisplayTime = 4;
 protected:
 	std::unordered_map<BeatType, engine::Tween<sf::Color>*> m_colorTweens;
 	std::unordered_map<BeatType, Json::Value> m_beats;
@@ -20,6 +20,8 @@ protected:
 public:
 	BeatDisplay(engine::Scene* scene);
 	virtual ~BeatDisplay();
+
+	virtual void SetActive(bool active);
 
 	virtual bool initialize(Json::Value& root);
 

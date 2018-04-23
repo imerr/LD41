@@ -131,6 +131,8 @@ bool Tower::initialize(Json::Value& root) {
 	m_range = root.get("range", 50).asFloat();
 	m_attackProjectile = root["projectile"];
 	m_faceMonster = root.get("face_monster", true).asBool();
+	m_towerType = root.get("tower_type", 0).asInt();
+	static_cast<Level*>(m_scene)->TowerCount[m_towerType]++;
 	return true;
 }
 
@@ -167,4 +169,5 @@ void Tower::Attack() {
 Tower::~Tower() {
 	m_scene->GetGame()->OnMouseClick.RemoveHandler(m_clickHandler.get());
 	static_cast<Level*>(m_scene)->OnBeat.RemoveHandler(m_beatHandler.get());
+	static_cast<Level*>(m_scene)->TowerCount[m_towerType]--;
 }

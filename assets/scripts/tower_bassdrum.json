@@ -7,6 +7,7 @@
   },
   "range": 200,
   "speed": 1,
+  "tower_type": 0,
   "body": {
     "type": "static",
     "shapes": [

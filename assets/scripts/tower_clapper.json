@@ -22,6 +22,7 @@
       }
     }
   },
+  "tower_type": 1,
   "range": 100,
   "speed": 4,
   "body": {

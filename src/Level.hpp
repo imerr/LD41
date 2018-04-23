@@ -30,6 +30,7 @@ protected:
 	bool m_fighting;
 	float m_spawnTimer;
 	int m_money;
+	bool m_gameOver;
 public:
 	explicit Level(engine::Game* game);
 	virtual ~Level();
@@ -67,7 +68,7 @@ public:
 
 	void GameOver();
 
-	bool m_gameOver;
+	int TowerCount[4];
 };
 
 

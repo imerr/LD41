@@ -494,19 +494,73 @@
         "interval": 2,
         "offset": 1,
         "volume": 0.5,
-        "type": 0
+        "type": 2,
+        "req": {
+          "1": [1]
+        }
       },
       {
         "sound": "assets/sounds/pop.wav",
         "interval": 2,
         "offset": 0,
-        "type": 1
+        "type": 0,
+        "req": {
+          "0": [1]
+        }
       },
       {
         "sound": "assets/sounds/pop.wav",
         "interval": 4,
         "offset": 0.5,
-        "type": 1
+        "type": 3,
+        "req": {
+          "0": [2]
+        }
+      },
+      {
+        "sound": "assets/sounds/cowbell.wav",
+        "interval": 4,
+        "offset": 1,
+        "type": 1,
+        "req": {
+          "2": [1]
+        }
+      },
+      {
+        "sound": "assets/sounds/cowbell.wav",
+        "interval": 4,
+        "offset": 2,
+        "type": 3,
+        "req": {
+          "2": [2]
+        }
+      },
+      {
+        "sound": "assets/sounds/cowbell.wav",
+        "interval": 4,
+        "offset": 3,
+        "type": 1,
+        "req": {
+          "2": [3]
+        }
+      },
+      {
+        "sound": "assets/sounds/cowbell.wav",
+        "interval": 4,
+        "offset": 0,
+        "type": 3,
+        "req": {
+          "2": [4]
+        }
+      },
+      {
+        "sound": "assets/sounds/drum.wav",
+        "interval": 2,
+        "offset": 1.5,
+        "type": 1,
+        "req": {
+          "3": [1]
+        }
       }
     ]
   },
@@ -534,9 +588,30 @@
       ["assets/scripts/m_slime_blue.json", 1, 5]
     ],
     [
-      ["assets/scripts/m_slime_green.json", 10, 3],
-      ["assets/scripts/m_slime_green.json", 10, 2],
-      ["assets/scripts/m_slime_blue.json", 1, 2]
+      ["assets/scripts/m_slime_green.json", 10, 1],
+      ["assets/scripts/m_slime_blue.json", 10, 3]
+    ],
+    [
+      ["assets/scripts/m_slime_blue.json", 10, 2],
+      ["assets/scripts/m_slime_green.json", 10, 3]
+    ],
+    [
+      ["assets/scripts/m_slime_blue.json", 10, 1],
+      ["assets/scripts/m_slime_yellow.json", 3, 3]
+    ],
+    [
+      ["assets/scripts/m_slime_yellow.json", 10, 2],
+      ["assets/scripts/m_slime_blue.json", 10, 1]
+    ],
+    [
+      ["assets/scripts/m_slime_yellow.json", 10, 1],
+      ["assets/scripts/m_slime_red.json", 10, 2]
+    ],
+    [
+      ["assets/scripts/m_slime_red.json", 20, 1]
+    ],
+    [
+      ["assets/scripts/m_slime_red.json", 20, 0.5]
     ]
   ]
 }

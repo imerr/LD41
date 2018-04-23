@@ -18,7 +18,7 @@
 Level::Level(engine::Game* game) : Scene(game), m_bpm(0), m_inputIndicator(nullptr),
 								   m_pressedInput{false, false, false, false}, m_currentRound(0), m_currentSpawn(0),
 								   m_fighting(false),
-								   m_spawnTimer(0), m_money(0), m_gameOver(false) {
+								   m_spawnTimer(0), m_money(0), m_gameOver(false), TowerCount{0,0,0,0} {
 	m_keyHandler = m_game->OnKeyPress.MakeHandler([](const sf::Event::KeyEvent&, bool down) { return down; },
 												  [this](const sf::Event::KeyEvent& e, bool down) {
 													  if (!down) {
@@ -59,12 +59,16 @@ bool Level::initialize(Json::Value& root) {
 	m_bpm = root["music"].get("bpm", 120).asInt();
 	m_sounds.clear();
 	for (auto& sound : root["music"]["sounds"]) {
-		SoundInfo s;
+		SoundInfo s(this);
 		s.Sound.reset(engine::ResourceManager::instance()->MakeSound(sound.get("sound", "").asString()));
 		s.Interval = sound.get("interval", 1).asFloat();
 		s.Volume = sound.get("volume", 1).asFloat();
 		s.Offset = sound.get("offset", 0).asFloat();
 		s.Type = static_cast<BeatType>(sound.get("type", 0).asInt());
+		for (const auto& r : sound["req"].getMemberNames()) {
+			s.TowerRequirement[std::stoi(r)][0] = sound["req"][r].get(0u, 0).asInt();
+			s.TowerRequirement[std::stoi(r)][1] = sound["req"][r].get(1u, 999).asInt();
+		}
 		s.Reset();
 		m_sounds.emplace_back(std::move(s));
 	}
@@ -98,6 +102,9 @@ void Level::OnUpdate(sf::Time interval) {
 			m_currentRound++;
 			m_currentSpawn = 0;
 			m_spawnTimer = 0;
+			for (auto& sound : m_sounds) {
+				sound.Reset();
+			}
 			auto cat = static_cast<engine::SpriteNode*>(m_scene->GetChildByID("cat"));
 			if (cat) {
 				cat->SetColor(sf::Color::White);
@@ -145,6 +152,9 @@ void Level::OnUpdate(sf::Time interval) {
 				nullptr, nullptr, nullptr, nullptr
 		};
 		for (auto& sound : m_sounds) {
+			if (!sound.IsPlaying()) {
+				continue;
+			}
 			sound.Update(beatTime);
 			int t = (int)sound.Type;
 			if (m_pressedInput[t]) {
@@ -240,7 +250,7 @@ void Level::OnInitializeDone() {
 				static_cast<LD41*>(m_game)->Restart();
 
 			});
-	ChangeMoney(100);
+	ChangeMoney(10);
 }
 
 std::vector<SoundInfo>& Level::GetSounds() {

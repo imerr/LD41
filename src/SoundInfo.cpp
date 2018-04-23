@@ -3,10 +3,15 @@
 //
 
 #include "SoundInfo.hpp"
+#include "Level.hpp"
 
 
-SoundInfo::SoundInfo() : Interval(1), Volume(1), Offset(0), Sound(nullptr),
-						 m_beatTime(std::numeric_limits<float>::infinity()), Played(false), m_cycles(0), m_hitCycle(0), IsHit(false) {
+SoundInfo::SoundInfo(Level* level) : Interval(1), Volume(1), Offset(0), Sound(nullptr),
+						 m_beatTime(std::numeric_limits<float>::infinity()), Played(false), m_cycles(0), m_hitCycle(0),
+						 IsHit(false), TowerRequirement{{0, 999},
+														{0, 999},
+														{0, 999},
+														{0, 999}}, m_level(level) {
 
 }
 
@@ -15,7 +20,6 @@ void SoundInfo::Update(float interval) {
 	Played = false;
 	// TODO: pitch
 	if (m_beatTime >= m_playIn) {
-		m_prevPlayTime = m_playIn;
 		m_beatTime -= m_playIn;
 		m_playIn = Interval;
 		Sound->play();
@@ -30,6 +34,9 @@ void SoundInfo::Update(float interval) {
 void SoundInfo::Reset() {
 	m_beatTime = -Offset;
 	m_playIn = Interval;
+	m_cycles = 0;
+	m_hitCycle = 0;
+	IsHit = false;
 	Sound->setVolume(Volume * 100);
 }
 
@@ -44,4 +51,14 @@ bool SoundInfo::IsCurrentHit() {
 
 bool SoundInfo::IsPrevHit() {
 	return IsHit && m_cycles > m_hitCycle;
+}
+
+bool SoundInfo::IsPlaying() {
+	for (int i = 0; i < 4; i++) {
+		int count = m_level->TowerCount[i];
+		if (count < TowerRequirement[i][0] || count > TowerRequirement[i][1]) {
+			return false;
+		}
+	}
+	return true;
 }
