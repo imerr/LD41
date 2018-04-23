@@ -247,7 +247,7 @@ void Level::OnInitializeDone() {
 				static_cast<LD41*>(m_game)->Restart();
 
 			});
-	ChangeMoney(10000);
+	ChangeMoney(10);
 }
 
 std::vector<SoundInfo>& Level::GetSounds() {
