@@ -9,7 +9,7 @@ include("engine/includes.cmake")
 include("engine/compiler.cmake")
 include_directories(.)
 
-set(SOURCE_FILES src/main.cpp src/LD41.cpp src/LD41.hpp src/Level.cpp src/Level.hpp src/BeatDisplay.cpp src/BeatDisplay.hpp src/SoundInfo.cpp src/SoundInfo.hpp src/Monster.cpp src/Monster.hpp src/Menu.cpp src/Menu.hpp src/ShopItem.cpp src/ShopItem.hpp src/Tower.cpp src/Tower.hpp)
+set(SOURCE_FILES src/main.cpp src/LD41.cpp src/LD41.hpp src/Level.cpp src/Level.hpp src/BeatDisplay.cpp src/BeatDisplay.hpp src/SoundInfo.cpp src/SoundInfo.hpp src/Monster.cpp src/Monster.hpp src/Menu.cpp src/Menu.hpp src/ShopItem.cpp src/ShopItem.hpp src/Tower.cpp src/Tower.hpp src/misc.hpp src/BeatQuality.cpp src/BeatQuality.hpp src/Projectile.cpp src/Projectile.hpp src/ClickBlocker.cpp src/ClickBlocker.hpp)
 
 if (ANDROID)
 	add_library(LD41 SHARED ${SOURCE_FILES})

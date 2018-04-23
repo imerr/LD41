@@ -6,16 +6,19 @@
 
 class Tower: public engine::SpriteNode {
 protected:
-	float m_attackSpeed;
-	int m_damage;
-	float m_damageDelay;
+	int m_attackSpeed;
 	bool m_placeMode;
 	bool m_placementBlocked;
 	float m_range;
 	int m_refund;
 	std::unique_ptr<engine::BaseEventHandler> m_clickHandler;
+	std::unique_ptr<engine::BaseEventHandler> m_beatHandler;
+	int m_beats;
+	Json::Value m_attackProjectile;
+	bool m_faceMonster;
 public:
 	Tower(engine::Scene* scene);
+	virtual ~Tower();
 
 	virtual bool initialize(Json::Value& root);
 
@@ -26,6 +29,8 @@ protected:
 	virtual void OnUpdate(sf::Time interval);
 
 	virtual void OnDraw(sf::RenderTarget& target, sf::RenderStates states, float delta);
+
+	void Attack();
 
 };
 

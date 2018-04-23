@@ -8,8 +8,10 @@
 #include <memory>
 #include <SFML/Audio/Sound.hpp>
 enum class BeatType {
-	None,
-	Beat,
+	Left,
+	Down,
+	Up,
+	Right,
 	Max
 };
 

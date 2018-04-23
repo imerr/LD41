@@ -4,17 +4,19 @@
   "size": [22, 18],
   "sprite": {
     "texture": "assets/images/slime.png",
-    "color": [53, 158, 57]
+    "color": [58, 111, 255]
   },
   "death_decal": {
     "type": "sprite",
     "despawn": 30,
     "size": [10, 10],
     "sprite": {
-      "texture": "assets/images/slime_goo.png",
-      "color": [53, 158, 57]
+      "texture":"assets/images/slime_goo.png",
+      "color": [58, 111, 255]
     }
   },
+  "spawn_death": "assets/scripts/m_slime_green.json",
+  "spawn_death_count": 2,
   "speed": 100,
   "body": {
     "shapes": [

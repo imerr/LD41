@@ -10,7 +10,7 @@
 
 Menu::Menu(engine::Scene* scene) : SpriteNode(scene), m_collapsed(false) {
 	m_defaultDescription = "Buy some towers and\nonce you are happy\nclick start to\nstart the round";
-	m_clickBlocker = std::make_unique<engine::BaseEventHandler>(m_scene->GetGame()->OnMouseClick.MakeHandler(
+	m_clickBlocker.reset(m_scene->GetGame()->OnMouseClick.MakeHandler(
 			[this](const sf::Mouse::Button& button, const sf::Vector2f& pos, bool down) {
 				return IsIn(pos.x, pos.y);
 			}, [this](const sf::Mouse::Button& button, const sf::Vector2f&, bool down) {
@@ -33,7 +33,7 @@ void Menu::OnInitializeDone() {
 		SetDescription(nullptr, "");
 	}
 	m_playButton = static_cast<engine::Button*>(GetChildByID("start"));
-	m_playHandler = std::make_unique<engine::BaseEventHandler>(
+	m_playHandler.reset(
 			m_playButton->OnClick.MakeHandler([this](engine::Button*, sf::Vector2f) {
 				static_cast<Level*>(m_scene)->SetFighting(true);
 				if (!IsCollapsed()) {
@@ -94,4 +94,8 @@ bool Menu::IsCollapsed() {
 
 void Menu::SetDefaultDescription(const std::string& desc) {
 	m_defaultDescription = desc;
+}
+
+Menu::~Menu() {
+	m_scene->GetGame()->OnMouseClick.RemoveHandler(m_clickBlocker.get());
 }

@@ -12,21 +12,44 @@
 #include <Engine/Text.hpp>
 #include "Level.hpp"
 #include "Menu.hpp"
+#include "Monster.hpp"
+#include "LD41.hpp"
 
 Level::Level(engine::Game* game) : Scene(game), m_bpm(0), m_inputIndicator(nullptr),
-								   m_pressedInput(false), m_currentRound(0), m_currentSpawn(0), m_fighting(false),
-								   m_spawnTimer(0), m_money(0) {
-	m_keyHandler = m_game->OnKeyPress.MakeHandler([](const sf::Event::KeyEvent&, bool) { return true; },
+								   m_pressedInput{false, false, false, false}, m_currentRound(0), m_currentSpawn(0),
+								   m_fighting(false),
+								   m_spawnTimer(0), m_money(0), m_gameOver(false) {
+	m_keyHandler = m_game->OnKeyPress.MakeHandler([](const sf::Event::KeyEvent&, bool down) { return down; },
 												  [this](const sf::Event::KeyEvent& e, bool down) {
-													  if (e.code == sf::Keyboard::Space && down) {
-														  m_pressedInput = true;
+													  if (!down) {
+														  return false;
 													  }
-													  return false;
+													  if (e.code == sf::Keyboard::Left || e.code == sf::Keyboard::A) {
+														  m_pressedInput[0] = true;
+													  } else if (e.code == sf::Keyboard::Down ||
+																 e.code == sf::Keyboard::S) {
+														  m_pressedInput[1] = true;
+													  } else if (e.code == sf::Keyboard::Up ||
+																 e.code == sf::Keyboard::K ||
+																 e.code == sf::Keyboard::W) {
+														  m_pressedInput[2] = true;
+													  } else if (e.code == sf::Keyboard::Right ||
+																 e.code == sf::Keyboard::L ||
+																 e.code == sf::Keyboard::D) {
+														  m_pressedInput[3] = true;
+													  } else {
+														  return false;
+													  }
+													  return true;
 												  }, this);
 }
 
 Level::~Level() {
 	m_game->OnKeyPress.RemoveHandler(m_keyHandler);
+	// Need to do this here due to reverse destruction order
+	while (m_children.size()) {
+		delete m_children.front();
+	}
 }
 
 bool Level::initialize(Json::Value& root) {
@@ -63,20 +86,38 @@ bool Level::initialize(Json::Value& root) {
 
 void Level::OnUpdate(sf::Time interval) {
 	Scene::OnUpdate(interval);
+	if (m_gameOver) {
+		return;
+	}
 	m_inputIndicator->SetActive(m_fighting);
 	if (m_fighting) {
 		m_spawnTimer += interval.asSeconds();
 		auto monsterContainer = GetChildByID("monsters");
-		if (m_currentSpawn >= m_rounds[m_currentRound].size() && monsterContainer->GetChildren().size() == 0) {
+		if (m_currentSpawn >= m_rounds[m_currentRound].size() && monsterContainer->GetChildren().empty()) {
 			m_fighting = false;
 			m_currentRound++;
+			m_currentSpawn = 0;
+			m_spawnTimer = 0;
+			auto cat = static_cast<engine::SpriteNode*>(m_scene->GetChildByID("cat"));
+			if (cat) {
+				cat->SetColor(sf::Color::White);
+			}
 			auto menu = static_cast<Menu*>(GetUi()->GetChildByID("menu"));
+			if (m_currentRound >= m_rounds.size()) {
+				m_gameOver = true;
+				m_ui->GetChildByID("win")->SetActive(true);
+				if (!menu->IsCollapsed()) {
+					menu->ToggleCollapse();
+				}
+				return;
+			}
 			if (menu->IsCollapsed()) {
 				menu->ToggleCollapse();
-				std::ostringstream ss;
-				ss << "Completed round " << m_currentRound << "\nAwarded TODO moneys\n";
-				menu->SetDefaultDescription(ss.str());
 			}
+			std::ostringstream ss;
+			ss << "Completed round " << m_currentRound << "\nAwarded TODO moneys\n";
+			menu->SetDefaultDescription(ss.str());
+			menu->ClearDescription(nullptr);
 			return;
 		}
 		while (m_currentSpawn < m_rounds[m_currentRound].size() &&
@@ -88,46 +129,101 @@ void Level::OnUpdate(sf::Time interval) {
 			}
 			spawn.Count--;
 			m_spawnTimer -= spawn.Delay;
-			engine::Factory::CreateChildFromFile(spawn.Script, monsterContainer);
+			static_cast<Monster*>(engine::Factory::CreateChildFromFile(spawn.Script,
+																	   monsterContainer))->StartPathTween();
 		}
-
-		float beatTime = interval.asSeconds() / (60.0f / m_bpm);
-		bool prevHit = false;
-		float closestDistance = std::numeric_limits<float>::infinity();
-		SoundInfo* closestSound = nullptr;
+		// Unscaled time!
+		float beatTime = interval.asSeconds() / m_scene->GetGame()->GetTimeScale() / (60.0f / m_bpm);
+		bool prevHit[4] = {false, false, false, false};
+		float closestDistance[4] = {
+				std::numeric_limits<float>::infinity(),
+				std::numeric_limits<float>::infinity(),
+				std::numeric_limits<float>::infinity(),
+				std::numeric_limits<float>::infinity()
+		};
+		SoundInfo* closestSound[4] = {
+				nullptr, nullptr, nullptr, nullptr
+		};
 		for (auto& sound : m_sounds) {
 			sound.Update(beatTime);
-			if (sound.Type == BeatType::Beat) {
-				if (m_pressedInput) {
-					float distance =
-							std::min(std::abs(sound.NextPlayTime()), std::abs(sound.LastPlayTime())) * (60.0f / m_bpm);
+			int t = (int)sound.Type;
+			if (m_pressedInput[t]) {
+				float distance =
+						std::min(std::abs(sound.NextPlayTime()), std::abs(sound.LastPlayTime())) * (60.0f / m_bpm);
 
-					if (distance < closestDistance && !sound.IsHit && distance < HitLimit) {
-						prevHit = std::abs(sound.NextPlayTime()) > std::abs(sound.LastPlayTime());
-						closestDistance = distance;
-						closestSound = &sound;
-					}
+				if (distance < closestDistance[t] && !sound.IsHit && distance < HitLimit) {
+					prevHit[t] = std::abs(sound.NextPlayTime()) > std::abs(sound.LastPlayTime());
+					closestDistance[t] = distance;
+					closestSound[t] = &sound;
 				}
 			}
 		}
-		if (m_pressedInput && closestSound) {
-			std::cout << closestDistance << std::endl;
-			sf::Color c = sf::Color::Blue;
-			closestSound->Hit(prevHit);
-			if (closestDistance > 0.3) {
-				c = sf::Color::Red;
-			} else if (closestDistance > 0.2) {
-				c = sf::Color(255, 128, 0); // Orange
-			} else if (closestDistance > 0.1) {
-				c = sf::Color::Yellow;
-			} else if (closestDistance > 0.05) {
-				c = sf::Color::Green;
+		for (int i = 0; i< (int)BeatType::Max; i++) {
+			if (m_pressedInput[i]) {
+				sf::Color c = sf::Color::Blue;
+				BeatQuality quality = BeatQuality::Perfect;
+				if (closestSound[i]) {
+					closestSound[i]->Hit(prevHit[i]);
+					if (closestDistance[i] > 0.3) {
+						c = sf::Color::Red;
+						quality = BeatQuality::Miss;
+					} else if (closestDistance[i] > 0.2) {
+						c = sf::Color(255, 128, 0); // Orange
+						quality = BeatQuality::Bad;
+					} else if (closestDistance[i] > 0.1) {
+						c = sf::Color::Yellow;
+						quality = BeatQuality::Ok;
+					} else if (closestDistance[i] > 0.05) {
+						c = sf::Color::Green;
+						quality = BeatQuality::Good;
+					}
+				} else {
+					quality = BeatQuality::Miss;
+				}
+				if (quality == BeatQuality::Miss || quality == BeatQuality::Bad) {
+					MakeTween<float>(true, 2.0f, 1.0, 3, [this](const float& val) {
+						m_scene->GetGame()->SetTimeScale(val);
+					});
+				}
+				std::string name;
+				switch (quality) {
+					case BeatQuality::Perfect:
+						name = "perfect";
+						break;
+					case BeatQuality::Good:
+						name = "good";
+						break;
+					case BeatQuality::Ok:
+						name = "ok";
+						break;
+					case BeatQuality::Bad:
+						name = "bad";
+						break;
+					case BeatQuality::Miss:
+						name = "miss";
+						break;
+				}
+				engine::SpriteNode* display = static_cast<engine::SpriteNode*>(m_inputIndicator->GetChildByID(name));
+				if (display) {
+					display->ClearTweens();
+					display->MakeTween<sf::Color>(true, sf::Color::White, sf::Color(255, 255, 255, 0), 0.5,
+												  [display](const sf::Color& col) {
+													  auto color = col;
+													  if (color.a > 128) {
+														  color.a = 255;
+													  } else {
+														  color.a *= 2;
+													  }
+													  display->SetColor(color);
+												  });
+				}
+				OnBeat.Fire(quality);
+				m_inputIndicator->MakeTween<sf::Color>(false, c, sf::Color::White, 0.2f, [this](const sf::Color& c) {
+					m_inputIndicator->SetColor(c);
+				});
 			}
-			m_inputIndicator->MakeTween<sf::Color>(false, c, sf::Color::White, 0.2f, [this](const sf::Color& c) {
-				m_inputIndicator->SetColor(c);
-			});
+			m_pressedInput[i] = false;
 		}
-		m_pressedInput = false;
 	}
 }
 
@@ -135,6 +231,15 @@ void Level::OnInitializeDone() {
 	Node::OnInitializeDone();
 	static_cast<engine::SpriteNode*>(GetUi()->GetChildByID("beat_indicator"));
 	m_inputIndicator = static_cast<engine::SpriteNode*>(GetUi()->GetChildByID("input_indicator"));
+	static_cast<engine::Button*>(m_ui->GetChildByID("game_over")->GetChildByID("restart"))->OnClick.MakeHandler(
+			[this](engine::Button*, sf::Vector2f) {
+				static_cast<LD41*>(m_game)->Restart();
+			});
+	static_cast<engine::Button*>(m_ui->GetChildByID("win")->GetChildByID("restart"))->OnClick.MakeHandler(
+			[this](engine::Button*, sf::Vector2f) {
+				static_cast<LD41*>(m_game)->Restart();
+
+			});
 	ChangeMoney(100);
 }
 
@@ -151,6 +256,18 @@ bool Level::ChangeMoney(int money) {
 	ss << m_money;
 	static_cast<engine::Text*>(m_ui->GetChildByID("menu")->GetChildByID("money"))->SetText(ss.str());
 	return true;
+}
+
+void Level::GameOver() {
+	m_gameOver = true;
+	auto gameover = m_ui->GetChildByID("game_over");
+	if (gameover) {
+		gameover->SetActive(true);
+	}
+	auto menu = static_cast<Menu*>(GetUi()->GetChildByID("menu"));
+	if (!menu->IsCollapsed()) {
+		menu->ToggleCollapse();
+	}
 }
 
 SpawnInfo::SpawnInfo(const std::string& script, size_t count, float delay) {

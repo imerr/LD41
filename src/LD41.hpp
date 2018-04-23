@@ -8,6 +8,8 @@ class LD41 : public engine::Game {
 public:
 	LD41();
 	virtual ~LD41();
+
+	void Restart();
 };
 
 

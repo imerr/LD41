@@ -1,15 +1,11 @@
-//
-// Created by iMer on 21.04.2018.
-//
-
 #ifndef LD41_LEVEL_HPP
 #define LD41_LEVEL_HPP
-
 
 #include <Engine/Scene.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <Engine/SpriteNode.hpp>
 #include "SoundInfo.hpp"
+#include "BeatQuality.hpp"
 
 class SpawnInfo {
 public:
@@ -26,7 +22,7 @@ protected:
 	int m_bpm;
 	engine::SpriteNode* m_inputIndicator;
 	engine::EventHandler<bool, const sf::Event::KeyEvent&, bool>* m_keyHandler;
-	bool m_pressedInput;
+	bool m_pressedInput[4];
 	std::vector<sf::Vector2f> m_path;
 	std::vector<std::vector<SpawnInfo>> m_rounds;
 	size_t m_currentRound;
@@ -66,6 +62,12 @@ public:
 	static constexpr float HitLimit = 0.5f;
 
 	bool ChangeMoney(int money);
+
+	engine::Event<BeatQuality> OnBeat;
+
+	void GameOver();
+
+	bool m_gameOver;
 };
 
 

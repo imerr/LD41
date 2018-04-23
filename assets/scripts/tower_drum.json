@@ -1,0 +1,36 @@
+{
+  "type": "tower",
+  "origin": "center",
+  "size": [30, 30],
+  "sprite": {
+    "texture": "assets/images/drum.png"
+  },
+  "range": 100,
+  "speed": 7,
+  "face_monster": false,
+  "body": {
+    "type": "static",
+    "shapes": [
+      {"type": "box", "width": 10, "height": 10}
+    ]
+  },
+  "projectile": {
+    "type": "projectile",
+    "size": [20, 20],
+    "velocity": 500,
+    "origin": "center",
+    "despawn": 0.25,
+    "spread": 360,
+    "count": 15,
+    "hits": 10,
+    "sprite": {
+      "texture": "assets/images/soundwave_sharp.png"
+    },
+    "body": {
+      "bullet": true,
+      "shapes": [
+        {"type": "box", "width": 20, "height": 20}
+      ]
+    }
+  }
+}

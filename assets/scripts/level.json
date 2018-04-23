@@ -15,12 +15,116 @@
           "type": "beat_display",
           "position": [50, 0],
           "beats": {
+            "0": {
+              "type": "sprite",
+              "origin": "center",
+              "size": [26, 28],
+              "sprite": {
+                "texture": "assets/images/left.png"
+              }
+            },
             "1": {
               "type": "sprite",
               "origin": "center",
-              "size": [38, 14],
+              "size": [26, 28],
               "sprite": {
-                "texture": "assets/images/space.png"
+                "texture": "assets/images/down.png"
+              }
+            },
+            "2": {
+              "type": "sprite",
+              "origin": "center",
+              "size": [26, 28],
+              "sprite": {
+                "texture": "assets/images/up.png"
+              }
+            },
+            "3": {
+              "type": "sprite",
+              "origin": "center",
+              "size": [26, 28],
+              "sprite": {
+                "texture": "assets/images/right.png"
+              }
+            }
+          }
+        },
+        {
+          "type": "sprite",
+          "identifier": "perfect",
+          "position": [50, -10],
+          "origin": "center",
+          "size": [106.5, 21],
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "color": [255, 255, 255, 0],
+            "animations": {
+              "default": {
+                "frames": [11]
+              }
+            }
+          }
+        },
+        {
+          "type": "sprite",
+          "identifier": "good",
+          "position": [50, -10],
+          "origin": "center",
+          "size": [58.5, 21],
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "color": [255, 255, 255, 0],
+            "animations": {
+              "default": {
+                "frames": [12]
+              }
+            }
+          }
+        },
+        {
+          "type": "sprite",
+          "identifier": "ok",
+          "position": [50, -10],
+          "origin": "center",
+          "size": [28.5, 21],
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "color": [255, 255, 255, 0],
+            "animations": {
+              "default": {
+                "frames": [13]
+              }
+            }
+          }
+        },
+        {
+          "type": "sprite",
+          "identifier": "bad",
+          "position": [50, -10],
+          "origin": "center",
+          "size": [43.5, 21],
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "color": [255, 255, 255, 0],
+            "animations": {
+              "default": {
+                "frames": [14]
+              }
+            }
+          }
+        },
+        {
+          "type": "sprite",
+          "identifier": "miss",
+          "position": [50, -10],
+          "origin": "center",
+          "size": [46.5, 21],
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "color": [255, 255, 255, 0],
+            "animations": {
+              "default": {
+                "frames": [15]
               }
             }
           }
@@ -143,7 +247,7 @@
           "children": [
             {
               "position": [10, 0],
-              "price": 5,
+              "price": 10,
               "description": "The Bassdrum:\nIt's a drum.\nIt's bassy.\nShoots out a wave\nof sound.",
               "icon": "assets/images/bassdrum.png",
               "script": "assets/scripts/tower_bassdrum.json",
@@ -151,7 +255,7 @@
             },
             {
               "position": [110, 0],
-              "price": 5,
+              "price": 30,
               "description": "The Cowbell:\nIt definitely needs\nmore cowbell.\nShoots out a\npiercing projectile",
               "icon": "assets/images/cowbell.png",
               "script": "assets/scripts/tower_cowbell.json",
@@ -159,7 +263,7 @@
             },
             {
               "position": [10, 100],
-              "price": 5,
+              "price": 40,
               "description": "The Clapper:\nApplause!\n\nClaps enemies to\nbits",
               "icon": "assets/images/clapper_icon.png",
               "script": "assets/scripts/tower_clapper.json",
@@ -167,7 +271,7 @@
             },
             {
               "position": [110, 100],
-              "price": 5,
+              "price": 50,
               "description": "The Snare Drum:\nBoots and *cats* and\nboots and *cats*\nSends out a shockwave\naround it.",
               "icon": "assets/images/drum.png",
               "script": "assets/scripts/tower_drum.json",
@@ -196,6 +300,120 @@
           }
         }
       ]
+    },
+    {
+      "type": "click_blocker",
+      "size": [1024, 576],
+      "active": false,
+      "identifier": "game_over",
+      "sprite": {
+        "texture": "assets/images/solid.png",
+        "color": [0,0,0,150]
+      },
+      "children": [
+        {
+          "type": "text",
+          "position": [512, 200],
+          "text": {
+            "font": "assets/lcd_solid.ttf",
+            "color": [255, 30, 30],
+            "size": 50,
+            "align": "center",
+            "outline": [107, 12, 12],
+            "outline_thickness": 2,
+            "text": "Game Over"
+          }
+        },
+        {
+          "type": "text",
+          "position": [512, 260],
+          "text": {
+            "font": "assets/lcd_solid.ttf",
+            "size": 20,
+            "align": "center",
+            "outline": [0, 0, 0],
+            "text": "You woke up the kitten! :("
+          }
+        },
+        {
+          "type": "button",
+          "origin": "center",
+          "position": [512, 400],
+          "size": [140, 40],
+          "identifier": "restart",
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "animations": {
+              "default": {
+                "frames": [16]
+              },
+              "hover": {
+                "frames": [17]
+              },
+              "active": {
+                "frames": [18]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "click_blocker",
+      "size": [1024, 576],
+      "identifier": "win",
+      "active": false,
+      "sprite": {
+        "texture": "assets/images/solid.png",
+        "color": [0,0,0,150]
+      },
+      "children": [
+        {
+          "type": "text",
+          "position": [512, 200],
+          "text": {
+            "font": "assets/lcd_solid.ttf",
+            "color": [48, 178, 78],
+            "size": 50,
+            "align": "center",
+            "outline": [33, 122, 52],
+            "outline_thickness": 2,
+            "text": "Victory!"
+          }
+        },
+        {
+          "type": "text",
+          "position": [512, 260],
+          "text": {
+            "font": "assets/lcd_solid.ttf",
+            "size": 20,
+            "align": "center",
+            "outline": [0, 0, 0],
+            "text": "You successfully protected the cat from the evil slimes"
+          }
+        },
+        {
+          "type": "button",
+          "origin": "center",
+          "position": [512, 400],
+          "size": [140, 40],
+          "identifier": "restart",
+          "sprite": {
+            "sheet": "assets/scripts/sheet_ui.json",
+            "animations": {
+              "default": {
+                "frames": [16]
+              },
+              "hover": {
+                "frames": [17]
+              },
+              "active": {
+                "frames": [18]
+              }
+            }
+          }
+        }
+      ]
     }
   ],
   "children": [
@@ -204,12 +422,32 @@
       "size": [1024, 576],
       "sprite": {
         "texture": "assets/images/bg.png"
+      },
+      "body": {
+        "type": "static",
+        "shapes": [
+          {"mask": 65535, "type":  "box", "width": 320, "height": 71, "x": 160, "y": 520},
+          {"mask": 65535, "type": "box", "width": 80, "height": 192, "x": 281, "y": 389},
+          {"mask": 65535, "type": "box", "width": 162, "height": 72, "x": 161, "y": 329},
+          {"mask": 65535, "type": "box", "width": 71, "height": 273, "x": 115, "y": 156},
+          {"mask": 65535, "type": "box", "width": 331, "height": 71, "x": 316, "y": 55},
+          {"mask": 65535, "type": "box", "width": 70, "height": 374, "x": 447, "y": 278},
+          {"mask": 65535, "type": "box", "width": 130, "height": 71, "x": 547, "y": 429},
+          {"mask": 65535, "type": "box", "width": 70, "height": 101, "x": 575, "y": 515},
+          {"mask": 65535, "type": "box", "width": 241, "height": 71, "x": 732, "y": 530},
+          {"mask": 65535, "type": "box", "width": 70, "height": 252, "x": 818, "y": 369},
+          {"mask": 65535, "type": "box", "width": 241, "height": 70, "x": 662, "y": 278},
+          {"mask": 65535, "type": "box", "width": 70, "height": 143, "x": 577, "y": 172},
+          {"mask": 65535, "type": "box", "width": 342, "height": 71, "x": 783, "y": 136},
+          {"mask": 65535, "type": "box", "width": 132, "height": 101, "x": 914, "y": 50}
+        ]
       }
     },
     {
       "type": "sprite",
       "size": [120, 50],
       "position": [850, 25],
+      "identifier": "cat",
       "_": "sleepy cat!",
       "__": "also hello if you're reading this",
       "___": "<3 :)",
@@ -292,7 +530,13 @@
   ],
   "rounds": [
     [
-      ["assets/scripts/m_slime_green.json", 5, 3]
+      ["assets/scripts/m_slime_green.json", 10, 3],
+      ["assets/scripts/m_slime_blue.json", 1, 5]
+    ],
+    [
+      ["assets/scripts/m_slime_green.json", 10, 3],
+      ["assets/scripts/m_slime_green.json", 10, 2],
+      ["assets/scripts/m_slime_blue.json", 1, 2]
     ]
   ]
 }

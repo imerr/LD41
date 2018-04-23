@@ -13,3 +13,7 @@ LD41::LD41(): Game(1024, 576) {
 LD41::~LD41() {
 
 }
+
+void LD41::Restart() {
+	m_loadingScene->Switch(m_scene, engine::Factory::create<Level>("assets/scripts/level.json", this));
+}

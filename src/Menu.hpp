@@ -19,6 +19,7 @@ protected:
 	std::unique_ptr<engine::BaseEventHandler> m_clickBlocker;
 public:
 	Menu(engine::Scene* scene);
+	virtual ~Menu();
 	void ToggleCollapse();
 	virtual void OnInitializeDone();
 

@@ -55,7 +55,7 @@ void BeatDisplay::OnUpdate(sf::Time interval) {
 			float pct =  ((duration + sound.LastPlayTime()) / duration);
 			c.a = static_cast<uint8_t>((sound.IsPrevHit() ? 128 : 255) * std::min(1.0f, std::max(0.0f, pct)));
 			bar->SetColor(c);
-			bar->SetPosition(0, barHeightPerSecond * sound.LastPlayTime() * bpm);
+			bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.LastPlayTime() * bpm);
 			barC[sound.Type]++;
 		}
 		for (size_t o = 0; o < 20 && sound.NextPlayTime(o) * bpm <= DisplayTime; o++) {
@@ -63,7 +63,7 @@ void BeatDisplay::OnUpdate(sf::Time interval) {
 				AddBar(sound.Type);
 			}
 			auto bar = static_cast<engine::SpriteNode*>(m_bars[sound.Type][barC[sound.Type]]);
-			bar->SetPosition(0, barHeightPerSecond * sound.NextPlayTime(o) * bpm);
+			bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.NextPlayTime(o) * bpm);
 			barC[sound.Type]++;
 			auto c = bar->GetColor();
 			if (o == 0 && sound.IsCurrentHit()) {

@@ -1,12 +1,29 @@
 {
   "type": "tower",
   "origin": "center",
-  "size": [45,45],
+  "size": [45, 45],
   "sprite": {
-    "texture": "assets/images/bassdrum.png"
+    "sheet": {
+      "texture": "assets/images/clapper.png",
+      "sprites": [
+        [0, 0, 18, 26],
+        [18, 0, 18, 26],
+        [34, 0, 18, 26]
+      ]
+    },
+    "animations": {
+      "default": {
+        "frames": [0]
+      },
+      "attack": {
+        "frames": [0,1,2],
+        "speed": 0.1,
+        "loop": false
+      }
+    }
   },
-  "range": 200,
-  "speed": 1,
+  "range": 100,
+  "speed": 4,
   "body": {
     "type": "static",
     "shapes": [
@@ -19,6 +36,9 @@
     "velocity": 200,
     "origin": "center",
     "despawn": 1,
+    "spread": 90,
+    "count": 3,
+    "hits": 2,
     "sprite": {
       "texture": "assets/images/soundwave_small.png"
     },
