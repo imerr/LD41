@@ -16,9 +16,11 @@ SoundInfo::SoundInfo(Level* level) : Interval(1), Volume(1), Offset(0), Sound(nu
 }
 
 void SoundInfo::Update(float interval) {
-	m_beatTime += interval;
 	Played = false;
-	// TODO: pitch
+	if (!IsPlaying()) {
+		return;
+	}
+	m_beatTime += interval;
 	if (m_beatTime >= m_playIn) {
 		m_beatTime -= m_playIn;
 		m_playIn = Interval;
@@ -37,6 +39,7 @@ void SoundInfo::Reset() {
 	m_cycles = 0;
 	m_hitCycle = 0;
 	IsHit = false;
+	Played = false;
 	Sound->setVolume(Volume * 100);
 }
 

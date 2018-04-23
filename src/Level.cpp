@@ -18,7 +18,7 @@
 Level::Level(engine::Game* game) : Scene(game), m_bpm(0), m_inputIndicator(nullptr),
 								   m_pressedInput{false, false, false, false}, m_currentRound(0), m_currentSpawn(0),
 								   m_fighting(false),
-								   m_spawnTimer(0), m_money(0), m_gameOver(false), TowerCount{0,0,0,0} {
+								   m_spawnTimer(0), m_money(0), m_gameOver(false), TowerCount{0, 0, 0, 0} {
 	m_keyHandler = m_game->OnKeyPress.MakeHandler([](const sf::Event::KeyEvent&, bool down) { return down; },
 												  [this](const sf::Event::KeyEvent& e, bool down) {
 													  if (!down) {
@@ -152,23 +152,20 @@ void Level::OnUpdate(sf::Time interval) {
 				nullptr, nullptr, nullptr, nullptr
 		};
 		for (auto& sound : m_sounds) {
-			if (!sound.IsPlaying()) {
-				continue;
-			}
 			sound.Update(beatTime);
-			int t = (int)sound.Type;
+			int t = (int) sound.Type;
 			if (m_pressedInput[t]) {
 				float distance =
 						std::min(std::abs(sound.NextPlayTime()), std::abs(sound.LastPlayTime())) * (60.0f / m_bpm);
-
-				if (distance < closestDistance[t] && !sound.IsHit && distance < HitLimit) {
-					prevHit[t] = std::abs(sound.NextPlayTime()) > std::abs(sound.LastPlayTime());
+				bool prev =std::abs(sound.NextPlayTime()) > std::abs(sound.LastPlayTime());
+				if (distance < closestDistance[t] && (!prev && !sound.IsCurrentHit() || prev && !sound.IsPrevHit()) && distance < HitLimit) {
+					prevHit[t] = prev;
 					closestDistance[t] = distance;
 					closestSound[t] = &sound;
 				}
 			}
 		}
-		for (int i = 0; i< (int)BeatType::Max; i++) {
+		for (int i = 0; i < (int) BeatType::Max; i++) {
 			if (m_pressedInput[i]) {
 				sf::Color c = sf::Color::Blue;
 				BeatQuality quality = BeatQuality::Perfect;
@@ -250,7 +247,7 @@ void Level::OnInitializeDone() {
 				static_cast<LD41*>(m_game)->Restart();
 
 			});
-	ChangeMoney(10);
+	ChangeMoney(10000);
 }
 
 std::vector<SoundInfo>& Level::GetSounds() {

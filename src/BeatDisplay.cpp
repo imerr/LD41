@@ -51,6 +51,7 @@ void BeatDisplay::OnUpdate(sf::Time interval) {
 				AddBar(sound.Type);
 			}
 			auto bar = static_cast<engine::SpriteNode*>(m_bars[sound.Type][barC[sound.Type]]);
+			bar->SetActive(true);
 			bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.LastPlayTime() * bpm);
 			barC[sound.Type]++;
 			auto c = bar->GetColor();
@@ -63,6 +64,7 @@ void BeatDisplay::OnUpdate(sf::Time interval) {
 				AddBar(sound.Type);
 			}
 			auto bar = static_cast<engine::SpriteNode*>(m_bars[sound.Type][barC[sound.Type]]);
+			bar->SetActive(true);
 			bar->SetPosition(-45 + static_cast<int>(sound.Type) * (20), barHeightPerSecond * sound.NextPlayTime(o) * bpm);
 			barC[sound.Type]++;
 			auto c = bar->GetColor();

@@ -487,7 +487,7 @@
     }
   ],
   "music": {
-    "bpm": 130,
+    "bpm": 120,
     "sounds": [
       {
         "sound": "assets/sounds/clap.wav",
